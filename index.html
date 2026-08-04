@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>学生服务平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+            max-width: 480px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .date-overlay {
+            position: absolute;
+            color: #999;
+            font-weight: 500;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 19px;
+            text-align: right;
+        }
+
+        .date-overlay.light {
+            color: #c4c4c4;
+        }
+
+        .stamp {
+            position: absolute;
+            mix-blend-mode: multiply;
+            pointer-events: none;
+        }
+
+        .clickable-area {
+            position: absolute;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .clickable-area:active {
+            opacity: 0.7;
+            background: rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="image-container">
+        <img src="a1.png" alt="详情页" id="mainImage">
+
+        <!-- 返回按钮点击区域 -->
+        <div class="clickable-area" id="backButton" onclick="goToPage2()"></div>
+
+        <!-- 印章图 -->
+        <img src="印章图.png" alt="印章" class="stamp" id="stamp">
+
+        <!-- 开始时间值 -->
+        <div class="date-overlay" id="startTime"></div>
+
+        <!-- 结束时间值 -->
+        <div class="date-overlay" id="endTime"></div>
+
+        <!-- 创建时间值 -->
+        <div class="date-overlay" id="createTime"></div>
+
+        <!-- 流程时间 -->
+        <div class="date-overlay light" id="processTime"></div>
+    </div>
+
+    <script>
+        function formatDate(date) {
+            var year = date.getFullYear();
+            var month = String(date.getMonth() + 1).padStart(2, '0');
+            var day = String(date.getDate()).padStart(2, '0');
+            return year + '-' + month + '-' + day;
+        }
+
+        function updateOverlays() {
+            var img = document.getElementById('mainImage');
+            if (!img.complete || img.offsetWidth === 0) {
+                setTimeout(updateOverlays, 100);
+                return;
+            }
+
+            var width = img.offsetWidth;
+            var height = img.offsetHeight;
+
+            // 返回按钮区域 (左上角)
+            var backBtn = document.getElementById('backButton');
+            backBtn.style.left = '0px';
+            backBtn.style.top = '0px';
+            backBtn.style.width = width * 0.2 + 'px';
+            backBtn.style.height = height * 0.075 + 'px';
+
+            var now = new Date();
+            var today = formatDate(now);
+            var fontSize = Math.round(width * 0.037);
+
+            // 开始时间 - 对准"开始时间"行（14%中心）
+            var startTimeEl = document.getElementById('startTime');
+            startTimeEl.style.right = '0px';
+            startTimeEl.style.top = height * 0.12 + 'px';
+            startTimeEl.style.width = width * 0.55 + 'px';
+            startTimeEl.style.height = height * 0.045 + 'px';
+            startTimeEl.style.fontSize = fontSize + 'px';
+            startTimeEl.textContent = today + ' 11:00';
+
+            // 结束时间 - 对准"结束时间"行（18%中心）
+            var endTimeEl = document.getElementById('endTime');
+            endTimeEl.style.right = '0px';
+            endTimeEl.style.top = height * 0.1751 + 'px';
+            endTimeEl.style.width = width * 0.55 + 'px';
+            endTimeEl.style.height = height * 0.045 + 'px';
+            endTimeEl.style.fontSize = fontSize + 'px';
+            endTimeEl.textContent = today + ' 15:00';
+
+            // 创建时间 - 对准"创建时间"行（56%中心）
+            var createTimeEl = document.getElementById('createTime');
+            createTimeEl.style.right = '0px';
+            createTimeEl.style.top = height * 0.544 + 'px';
+            createTimeEl.style.width = width * 0.55 + 'px';
+            createTimeEl.style.height = height * 0.045 + 'px';
+            createTimeEl.style.fontSize = fontSize + 'px';
+            createTimeEl.textContent = today + ' 08:21';
+
+            // 流程时间 - 对准流程详情行（72%中心），浅灰色
+            var processTimeEl = document.getElementById('processTime');
+            processTimeEl.style.right = '0px';
+            processTimeEl.style.top = height * 0.70 + 'px';
+            processTimeEl.style.width = width * 0.5 + 'px';
+            processTimeEl.style.height = height * 0.04 + 'px';
+            processTimeEl.style.fontSize = fontSize + 'px';
+            processTimeEl.textContent = today + ' 08:24';
+
+            // 印章图 - 对照1.jpg位置
+            var stamp = document.getElementById('stamp');
+            var stampWidth = width * 0.27;
+            stamp.style.width = stampWidth + 'px';
+            stamp.style.height = stampWidth + 'px';
+            stamp.style.left = (width * 0.85 - stampWidth / 2) + 'px';
+            stamp.style.top = (height * 0.136 - stampWidth / 2) + 'px';
+        }
+
+        function goToPage2() {
+            window.location.href = 'page2.html';
+        }
+
+        window.addEventListener('load', function() {
+            setTimeout(updateOverlays, 300);
+            window.addEventListener('resize', updateOverlays);
+        });
+    </script>
+</body>
+</html>

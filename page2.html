@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>学生服务平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+            max-width: 480px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .image-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .date-overlay {
+            position: absolute;
+            color: #999;
+            font-weight: 500;
+            white-space: nowrap;
+            z-index: 5;
+        }
+
+        .clickable-area {
+            position: absolute;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .clickable-area:active {
+            opacity: 0.7;
+            background: rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="image-container">
+        <img src="a2.png" alt="请假记录页" id="mainImage">
+
+        <!-- 日期1 -->
+        <div class="date-overlay" id="date1"></div>
+        <!-- 日期2 -->
+        <div class="date-overlay" id="date2"></div>
+        <!-- 日期3 -->
+        <div class="date-overlay" id="date3"></div>
+
+        <!-- 返回按钮点击区域 -->
+        <div class="clickable-area" id="backButton" onclick="goBack()"></div>
+
+        <!-- 请假记录卡片点击区域 -->
+        <div class="clickable-area" id="recordCard1" onclick="goToIndex()"></div>
+        <div class="clickable-area" id="recordCard2" onclick="goToIndex()"></div>
+        <div class="clickable-area" id="recordCard3" onclick="goToIndex()"></div>
+        <div class="clickable-area" id="recordCard4" onclick="goToIndex()"></div>
+    </div>
+
+    <script>
+        function formatDate(date) {
+            var year = date.getFullYear();
+            var month = String(date.getMonth() + 1).padStart(2, '0');
+            var day = String(date.getDate()).padStart(2, '0');
+            return year + '-' + month + '-' + day;
+        }
+
+        function updateClickableAreas() {
+            var img = document.getElementById('mainImage');
+            if (!img.complete) {
+                setTimeout(updateClickableAreas, 100);
+                return;
+            }
+
+            var width = img.offsetWidth;
+            var height = img.offsetHeight;
+
+            // 日期文字 - 位置和大小自己调
+            var today = formatDate(new Date());
+            var dates = [
+                { id: 'date1', top: 0.194, left: 0.75, size: 0.031, color: '#999', suffix: '' },  // 第1个日期：top/left/size/color自己调
+                { id: 'date2', top: 0.247, left: 0.209, size: 0.034, color: '#949494', suffix: ' 11:00' },   // 第2个日期
+                { id: 'date3', top: 0.2744, left: 0.209, size: 0.034, color: '#949494', suffix: ' 15:00' }    // 第3个日期
+            ];
+            for (var i = 0; i < dates.length; i++) {
+                var el = document.getElementById(dates[i].id);
+                el.style.top = height * dates[i].top + 'px';
+                el.style.left = width * dates[i].left + 'px';
+                el.style.fontSize = Math.round(width * dates[i].size) + 'px';
+                el.style.color = dates[i].color;
+                el.textContent = today + (dates[i].suffix || '');
+            }
+
+            // 返回按钮区域 (左上角)
+            var backBtn = document.getElementById('backButton');
+            backBtn.style.left = '0px';
+            backBtn.style.top = '0px';
+            backBtn.style.width = width * 0.2 + 'px';
+            backBtn.style.height = height * 0.075 + 'px';
+
+            // 请假记录卡片1 (第一个卡片，大约从20%到35%高度)
+            var card1 = document.getElementById('recordCard1');
+            card1.style.left = '0px';
+            card1.style.top = height * 0.20 + 'px';
+            card1.style.width = '100%';
+            card1.style.height = height * 0.15 + 'px';
+
+            // 请假记录卡片2
+            var card2 = document.getElementById('recordCard2');
+            card2.style.left = '0px';
+            card2.style.top = height * 0.35 + 'px';
+            card2.style.width = '100%';
+            card2.style.height = height * 0.15 + 'px';
+
+            // 请假记录卡片3
+            var card3 = document.getElementById('recordCard3');
+            card3.style.left = '0px';
+            card3.style.top = height * 0.50 + 'px';
+            card3.style.width = '100%';
+            card3.style.height = height * 0.15 + 'px';
+
+            // 请假记录卡片4
+            var card4 = document.getElementById('recordCard4');
+            card4.style.left = '0px';
+            card4.style.top = height * 0.65 + 'px';
+            card4.style.width = '100%';
+            card4.style.height = height * 0.15 + 'px';
+        }
+
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            }
+        }
+
+        function goToIndex() {
+            window.location.href = 'index.html';
+        }
+
+        window.addEventListener('load', function() {
+            setTimeout(updateClickableAreas, 500);
+            window.addEventListener('resize', updateClickableAreas);
+        });
+    </script>
+</body>
+</html>
